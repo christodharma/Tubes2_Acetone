@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tubes2_Acetone.MainPage">
+
+    <ScrollView>
+        <Grid>
+            <StackLayout x:Name="UI" 
+                         Orientation="Vertical"
+                         Spacing="30">
+                <Label Text="Treasure Hunt Solver"
+                       HorizontalOptions="Center"
+                       FontSize="32"
+                       />
+                <StackLayout x:Name="IO" Orientation="Horizontal">
+                    <StackLayout x:Name="InputZone"
+                                 Orientation="Vertical"
+                                 Spacing="30"
+                                 Padding="30">
+                        <Label
+                            Text="INPUT"
+                            FontSize="24"/>
+                        <Label Text="Filename"
+                               />
+                        <Entry Placeholder="Enter File Location"
+                               />
+                        <Label
+                            Text="Algoritma"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Button Text="BFS"/>
+                            <Button Text="DFS"/>
+                        </StackLayout>
+                        <Button Text="Visualize" 
+                                BackgroundColor="{StaticResource Tertiary}"
+                                TextColor="White"/>
+
+                    </StackLayout>
+                    <StackLayout x:Name="OutputZone"
+                                 Orientation="Vertical"
+                                 Spacing="30"
+                                 Padding="30">
+                        <Label Text="OUTPUT"
+                               FontSize="24"
+                               HeightRequest="250"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Route: " WidthRequest="700"/>
+                            <Label Text="Steps: "/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Nodes: " WidthRequest="650"/>
+                            <Label Text="Execution Time: "/>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
