@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Storage;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Tubes2_Acetone;
 
@@ -52,47 +50,54 @@ public partial class MainPage : ContentPage
 
         if (result != null)
         {
-            string FilePath = result.FullPath;
-            ((MainViewModel)BindingContext).FilePath = result.FullPath;
-            // Do something with the selected file
-            // Read the text file contents
-            string fileContents = File.ReadAllText(FilePath);
+            FilePathEntry.Text = result.FullPath;
+        }
+    }
+    private void OnLoadFileClicked(object sender, EventArgs e)
+    {
+        string filePath = FilePathEntry.Text;
+        ((MainViewModel)BindingContext).FilePath = FilePathEntry.Text;
 
-            // Split the contents into lines
-            string[] lines = fileContents.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-            // Iterate over the lines and characters to add Image controls to the Grid
-            for (int row = 0; row < lines.Length; row++)
+        if (!string.IsNullOrEmpty(filePath))
+        {
+            try
             {
-                for (int col = 0; col < lines[row].Length; col++)
+                // Read the text file contents
+                string fileContents = File.ReadAllText(filePath);
+
+                // Split the contents into lines
+                string[] lines = fileContents.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Iterate over the lines and characters to add Image controls to the Grid
+                for (int row = 0; row < lines.Length; row++)
                 {
-                    // Create an Image control for the current character
-                    Image image = new Image();
-                    if (lines[row][col] == 'X')
+                    for (int col = 0; col < lines[row].Length; col++)
                     {
-                        // Set the image source for walls
-                        image.Source = "wall";
+                        // Create an Image control for the current character
+                        Image image = new();
+                        if (lines[row][col] == 'X')
+                        {
+                            // Set the image source for walls
+                            image.Source = "wall";
+                        }
+                        else if (lines[row][col] == 'T')
+                        {
+                            image.Source = "treasure";
+                        }
+                        else if (lines[row][col] == 'R')
+                        {
+                            image.Source = "visited";
+                        }
+                        // Add the Image control to the Grid
+                        Grid.SetRow(image, row);
+                        Grid.SetColumn(image, col);
+                        MapGrid.Children.Add(image);
                     }
-                    else if (lines[row][col] == 'T')
-                    {
-                        image.Source = "treasure";
-                        image.Scale = 0.1;
-                    } else if (lines[row][col] == 'R')
-                    {
-                        image.Source = "visited";
-                    }
-                    /*
-                    else
-                    {
-                        // Set the image source for other objects
-                        image.Source = "object";
-                    }
-                    */
-                    // Add the Image control to the Grid
-                    Grid.SetRow(image, row);
-                    Grid.SetColumn(image, col);
-                    MapGrid.Children.Add(image);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading file: {ex.Message}");
             }
         }
     }
