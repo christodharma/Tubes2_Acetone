@@ -51,7 +51,6 @@
 	<ItemGroup>
 	  <None Remove="Resources\Fonts\SpongeboyRegular-gx2n6.otf" />
 	  <None Remove="Resources\Images\background.jpg" />
-	  <None Remove="Resources\Images\treasure.jpg" />
 	  <None Remove="Resources\Images\treasure.png" />
 	  <None Remove="Resources\Images\woodbutton.png" />
 	</ItemGroup>

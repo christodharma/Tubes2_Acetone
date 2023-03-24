@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Tubes2_Acetone.MainPage">
-
+             x:Class="Tubes2_Acetone.MainPage"
+             BackgroundImageSource="background.jpg">
     <ScrollView>
         <Grid>
             <StackLayout x:Name="UI" 
@@ -29,6 +29,7 @@
                         <StackLayout Orientation="Horizontal">
                             <Button Text="BFS"/>
                             <Button Text="DFS"/>
+                            <Button Text="TSP"/>
                         </StackLayout>
                         <Button Text="Visualize" 
                                 BackgroundColor="{StaticResource Tertiary}"
@@ -40,15 +41,28 @@
                                  Spacing="30"
                                  Padding="30">
                         <Label Text="OUTPUT"
-                               FontSize="24"
-                               HeightRequest="250"/>
+                               FontSize="24"/>
+                        <Grid x:Name="MapGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                        </Grid>
+
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Route: " WidthRequest="700"/>
-                            <Label Text="Steps: "/>
+                            <Label Text="Route: " 
+                                   HorizontalOptions="StartAndExpand"
+                                   MinimumWidthRequest="500"/>
+                            <Label Text="Steps: " HorizontalOptions="End"/>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Nodes: " WidthRequest="650"/>
-                            <Label Text="Execution Time: "/>
+                            <Label Text="Nodes: " HorizontalOptions="StartAndExpand"
+                                   MinimumWidthRequest="500"/>
+                            <Label Text="Execution Time: " HorizontalOptions="End"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>
