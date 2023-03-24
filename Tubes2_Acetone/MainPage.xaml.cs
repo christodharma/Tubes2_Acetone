@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel;
-
+using Microsoft.Maui.Graphics;
 namespace Tubes2_Acetone;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
-	{
-		InitializeComponent();
+    public MainPage()
+    {
+        InitializeComponent();
         BindingContext = new MainViewModel();
-	}
+    }
     public class MainViewModel : INotifyPropertyChanged
     {
         private string _filePath;
@@ -25,6 +25,20 @@ public partial class MainPage : ContentPage
                 }
             }
         }
+        private string _stepSolution;
+        public string StepSolution
+        {
+            get { return _stepSolution; }
+            set
+            {
+                if (_stepSolution != value)
+                {
+                    _stepSolution = value;
+                    OnPropertyChanged(nameof(StepSolution));
+                }
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -52,6 +66,7 @@ public partial class MainPage : ContentPage
         {
             FilePathEntry.Text = result.FullPath;
         }
+        ((MainViewModel)BindingContext).StepSolution = "0";
     }
     private void OnLoadFileClicked(object sender, EventArgs e)
     {
@@ -63,35 +78,60 @@ public partial class MainPage : ContentPage
             try
             {
                 // Read the text file contents
-                string fileContents = File.ReadAllText(filePath);
+                string[] lines = File.ReadAllLines(filePath);
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    MapGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                }
+                int numColumns = lines[0].Split(' ').Length;
+                for (int i = 0; i < numColumns; i++)
+                {
+                    MapGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+                }
 
-                // Split the contents into lines
-                string[] lines = fileContents.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                // Iterate over the lines and characters to add Image controls to the Grid
                 for (int row = 0; row < lines.Length; row++)
                 {
-                    for (int col = 0; col < lines[row].Length; col++)
+                    string[] words = lines[row].Split(' ');
+                    for (int col = 0; col < words.Length; col++)
                     {
-                        // Create an Image control for the current character
-                        Image image = new();
-                        if (lines[row][col] == 'X')
+
+                        /*var label = new Label
                         {
-                            // Set the image source for walls
-                            image.Source = "wall";
-                        }
-                        else if (lines[row][col] == 'T')
+                            Text = words[col],
+                            TextColor = Colors.Black,
+                            BackgroundColor = words[col] == "X" ? Colors.Gray : Colors.White
+                        };
+                        MapGrid.Children.Add(label);*/
+
+
+                        // Create an image for each word and add it to the grid
+                        var image = new Image();
+                        if (words[col] == "X")
                         {
-                            image.Source = "treasure";
+                            image.Source = "wall.png";
+                            image.BackgroundColor = Colors.Gray;
                         }
-                        else if (lines[row][col] == 'R')
+                        else if (words[col] == "T")
                         {
-                            image.Source = "visited";
+                            image.Source = "treasure.png";
+                            image.BackgroundColor = Colors.Yellow;
                         }
-                        // Add the Image control to the Grid
+                        else if (words[col] == "R")
+                        {
+                            image.Source = "visited.png";
+                            image.BackgroundColor = Colors.Black;
+                        }
+                        else if (words[col] == "K")
+                        {
+                            image.Source = "treasure.png";
+                            image.BackgroundColor = Colors.White;
+                        }
+
+                        // Add the image to the grid
                         Grid.SetRow(image, row);
                         Grid.SetColumn(image, col);
                         MapGrid.Children.Add(image);
+
                     }
                 }
             }
