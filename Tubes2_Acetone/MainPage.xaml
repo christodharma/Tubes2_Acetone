@@ -22,8 +22,8 @@
                             FontSize="24"/>
                         <Label Text="Filename"
                                />
-                        <Entry Placeholder="Enter File Location"
-                               />
+                        <Label x:Name="FilePathLabel" Text="{Binding FilePath}"/>
+                        <Button Text="Choose File" Clicked="OnChooseFileClicked" />
                         <Label
                             Text="Algoritma"/>
                         <StackLayout Orientation="Horizontal">
