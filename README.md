@@ -52,6 +52,6 @@ TSPSearch adalah fungsi utama yang akan melakukan pencarian jalur terpendek untu
 
 ## Kontributor
 
-13521009 Christophorus Dharma Winata
-13521125 Asyifa Nurul Shafira
+13521009 Christophorus Dharma Winata <br>
+13521125 Asyifa Nurul Shafira <br>
 13521133 Cetta Reswara Parahita
