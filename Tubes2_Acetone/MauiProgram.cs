@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Tubes2_13521009;
+namespace Tubes2_Acetone;
 
 public static class MauiProgram
 {
