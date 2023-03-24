@@ -31,10 +31,17 @@
                         <Label
                             Text="Algoritma"/>
                         <StackLayout Orientation="Horizontal">
-                            <Button Text="BFS"/>
-                            <Button Text="DFS"/>
-                            <Button Text="TSP"/>
+                            <RadioButton x:Name="BFSChoice" Content="BFS" GroupName="AlgorithmChoice"/>
+                            <RadioButton x:Name="DFSChoice" Content="DFS" GroupName="AlgorithmChoice"/>
+                            <StackLayout Orientation="Horizontal">
+                                <CheckBox x:Name="TSPChoice"/>
+                                <Label Text="TSP" VerticalOptions="Center" />
+                            </StackLayout>
                         </StackLayout>
+                        <Button Text="Run"
+                                BackgroundColor="{StaticResource Secondary}"
+                                TextColor="{StaticResource Tertiary}"
+                                Clicked="OnRunClicked"/>
                         <Button Text="Visualize" 
                                 BackgroundColor="{StaticResource Tertiary}"
                                 TextColor="White"/>
@@ -52,18 +59,28 @@
                         </Grid>
 
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Route: " 
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Spacing="10">
+                                <Label Text="Route: " 
                                    HorizontalOptions="StartAndExpand"
                                    MinimumWidthRequest="100"/>
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                                <Label Text="{Binding RouteSolution}"/>
+                            </StackLayout>
+                            
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
                                 <Label Text="Steps: "/>
                                 <Label Text="{Binding StepSolution}" />
                             </StackLayout>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Nodes: " HorizontalOptions="StartAndExpand"
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Spacing="10">
+                                <Label Text="Nodes: " 
                                    MinimumWidthRequest="100"/>
-                            <Label Text="Execution Time: " HorizontalOptions="End"/>
+                                <Label Text="{Binding NodeSolution}"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
+                                <Label Text="Execution Time: "/>
+                                <Label Text="{Binding ExecutionTimeSolution}"/>
+                            </StackLayout>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

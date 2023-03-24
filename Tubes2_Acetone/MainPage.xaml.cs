@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Maui.Graphics;
 namespace Tubes2_Acetone;
 
 public partial class MainPage : ContentPage
@@ -38,7 +37,45 @@ public partial class MainPage : ContentPage
                 }
             }
         }
-
+        private string _nodeSolution;
+        public string NodeSolution
+        {
+            get { return _nodeSolution; }
+            set
+            {
+                if (_nodeSolution != value)
+                {
+                    _nodeSolution = value;
+                    OnPropertyChanged(nameof(NodeSolution));
+                }
+            }
+        }
+        private string _executionTimeSolution;
+        public string ExecutionTimeSolution
+        {
+            get { return _executionTimeSolution; }
+            set
+            {
+                if (_executionTimeSolution != value)
+                {
+                    _executionTimeSolution = value;
+                    OnPropertyChanged(nameof(ExecutionTimeSolution));
+                }
+            }
+        }
+        private string _routeSolution;
+        public string RouteSolution
+        {
+            get { return _routeSolution; }
+            set
+            {
+                if (_routeSolution != value)
+                {
+                    _routeSolution = value;
+                    OnPropertyChanged(nameof(RouteSolution));
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -66,13 +103,15 @@ public partial class MainPage : ContentPage
         {
             FilePathEntry.Text = result.FullPath;
         }
-        ((MainViewModel)BindingContext).StepSolution = "0";
     }
     private void OnLoadFileClicked(object sender, EventArgs e)
     {
         string filePath = FilePathEntry.Text;
         ((MainViewModel)BindingContext).FilePath = FilePathEntry.Text;
-
+        ((MainViewModel)BindingContext).StepSolution = "0";
+        ((MainViewModel)BindingContext).RouteSolution = "None";
+        ((MainViewModel)BindingContext).NodeSolution = "0";
+        ((MainViewModel)BindingContext).ExecutionTimeSolution = "0 ms";
         if (!string.IsNullOrEmpty(filePath))
         {
             try
@@ -94,17 +133,6 @@ public partial class MainPage : ContentPage
                     string[] words = lines[row].Split(' ');
                     for (int col = 0; col < words.Length; col++)
                     {
-
-                        /*var label = new Label
-                        {
-                            Text = words[col],
-                            TextColor = Colors.Black,
-                            BackgroundColor = words[col] == "X" ? Colors.Gray : Colors.White
-                        };
-                        MapGrid.Children.Add(label);*/
-
-
-                        // Create an image for each word and add it to the grid
                         var image = new Image();
                         if (words[col] == "X")
                         {
@@ -127,11 +155,11 @@ public partial class MainPage : ContentPage
                             image.BackgroundColor = Colors.White;
                         }
 
-                        // Add the image to the grid
+                        image.Aspect = Aspect.AspectFit;
+
                         Grid.SetRow(image, row);
                         Grid.SetColumn(image, col);
                         MapGrid.Children.Add(image);
-
                     }
                 }
             }
@@ -141,4 +169,95 @@ public partial class MainPage : ContentPage
             }
         }
     }
+    private void OnRunClicked(object sender, EventArgs e)
+    {
+        try 
+        {
+            string filePath = FilePathEntry.Text;
+            Node[,] Nodes = InputMethods.InputFile(filePath);
+            Node[] NodeSolution;
+            string[,] NodesAsString = InputMethods.TXTtoArray(filePath);
+            ((MainViewModel)BindingContext).NodeSolution = Algorithm.CountNodes(Nodes).ToString();
+            if (BFSChoice.IsChecked)
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                NodeSolution = Algorithm.BFSSearch(Nodes, InputMethods.CountTreasure(NodesAsString));
+                string _RouteSolution = string.Join(" - ", Algorithm.GetRoute(NodeSolution));
+                int _StepSolution = Algorithm.CountSteps(NodeSolution);
+                ((MainViewModel)BindingContext).StepSolution = _StepSolution.ToString();
+                ((MainViewModel)BindingContext).RouteSolution = _RouteSolution;
+                watch.Stop();
+                ((MainViewModel)BindingContext).ExecutionTimeSolution = watch.ElapsedMilliseconds.ToString();
+                /*MapGrid.Children.Clear();*/
+                UpdateImageGrid(MapVisualizer.StringToVisualize(Nodes, NodeSolution), MapGrid);
+            }
+            else if (DFSChoice.IsChecked)
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                NodeSolution = Algorithm.DFSSearch(Nodes, InputMethods.CountTreasure(NodesAsString));
+                string _RouteSolution = string.Join(" - ", Algorithm.GetRoute(NodeSolution));
+                int _StepSolution = Algorithm.CountSteps(NodeSolution);
+                ((MainViewModel)BindingContext).StepSolution = _StepSolution.ToString();
+                ((MainViewModel)BindingContext).RouteSolution = _RouteSolution;
+                watch.Stop();
+                ((MainViewModel)BindingContext).ExecutionTimeSolution = watch.ElapsedMilliseconds.ToString();
+                /*MapGrid.Children.Clear();*/
+                UpdateImageGrid(MapVisualizer.StringToVisualize(Nodes, NodeSolution), MapGrid);
+            }
+            else
+            {
+                //nothing is checked, nothing happens
+            }
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Error : {ex.Message}");
+        }
+    }
+    private static void UpdateImageGrid(string[,] map, Grid mapGrid)
+    { 
+        for (int row = 0; row < map.GetLength(0); row++)
+        {
+            for (int col = 0; col < map.GetLength(1); col++)
+            {
+                Image image = (Image)mapGrid.Children[row * map.GetLength(1) + col];
+                switch (map[row, col])
+                {
+                    case "X":
+                        image.Source = "wall.png";
+                        image.BackgroundColor = Colors.Gray;
+                        break;
+                    case "T":
+                        image.Source = "treasure.png";
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                    case "R":
+                        image.Source = "visited.png";
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                    case "K":
+                        image.Source = "treasure.png";
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                    case "A":
+                        image.Source = null;
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                    case "B":
+                        image.Source = null;
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                    case "C":
+                        image.Source = null;
+                        image.BackgroundColor = Colors.Green;
+                        break;
+
+                    default:
+                        image.Source = null;
+                        image.BackgroundColor = Colors.Green;
+                        break;
+                }
+            }
+        }
+    }
+
 }
